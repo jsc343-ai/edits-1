@@ -16,6 +16,7 @@ import { Spinner } from "@/components/ui/spinner";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { FalCheckButton } from "@/components/fal-check-button";
 import { FalLab } from "@/components/admin/fal-lab";
+import { ServiceKeysPanel } from "@/components/admin/service-keys-panel";
 
 interface AdminData {
   players: PlayerRecord[];
@@ -345,6 +346,7 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
       </TabsContent>
 
       <TabsContent value="settings" className="mt-4 flex flex-col gap-4">
+        <ServiceKeysPanel />
         <FalCheckButton />
         <FalLab />
         <div className="flex flex-col gap-3 rounded-2xl border border-border bg-card p-4 text-sm">
