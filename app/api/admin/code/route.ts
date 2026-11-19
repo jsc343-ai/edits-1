@@ -1,11 +1,12 @@
 import { NextResponse } from "next/server";
 import { isAdminEmail } from "@/lib/server/admin-auth";
 import { hmacSha256Hex, randomSixDigits } from "@/lib/server/hmac";
+import { getResendKey } from "@/lib/server/service-keys";
 
 const CODE_TTL_MS = 10 * 60 * 1000;
 
 export async function POST(req: Request) {
-  const apiKey = process.env.RESEND_API_KEY;
+  const apiKey = getResendKey();
   if (!apiKey) return NextResponse.json({ error: "not_configured" }, { status: 503 });
 
   const body = (await req.json().catch(() => ({}))) as { email?: unknown };
@@ -20,7 +21,7 @@ export async function POST(req: Request) {
     method: "POST",
     headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
     body: JSON.stringify({
-      from: process.env.EMAIL_FROM || "Jsc343 AI Edits 2 <onboarding@resend.dev>",
+      from: process.env.EMAIL_FROM || "Jsc343 AI Edits 1 <onboarding@resend.dev>",
       to: [email],
       subject: "Admin login code",
       text: `Your Jsc343 AI Edits 2 admin login code is ${code}. It expires in 10 minutes.`,

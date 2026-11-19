@@ -1,11 +1,12 @@
 import { NextResponse } from "next/server";
 import { createHmac, randomInt } from "node:crypto";
+import { getResendKey } from "@/lib/server/service-keys";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const CODE_TTL_MS = 10 * 60 * 1000;
 
 export async function POST(req: Request) {
-  const apiKey = process.env.RESEND_API_KEY;
+  const apiKey = getResendKey();
   if (!apiKey) return NextResponse.json({ error: "not_configured" }, { status: 503 });
 
   const body = (await req.json().catch(() => ({}))) as { email?: unknown };
@@ -22,7 +23,7 @@ export async function POST(req: Request) {
     method: "POST",
     headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
     body: JSON.stringify({
-      from: process.env.EMAIL_FROM || "Jsc343 AI Edits 2 <onboarding@resend.dev>",
+      from: process.env.EMAIL_FROM || "Jsc343 AI Edits 1 <onboarding@resend.dev>",
       to: [email],
       subject: "Your verification code",
       text: `Your Jsc343 AI Edits 2 verification code is ${code}. It expires in 10 minutes.`,
